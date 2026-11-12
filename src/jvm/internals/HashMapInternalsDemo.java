@@ -11,6 +11,7 @@ public class HashMapInternalsDemo {
         // 2. Data Insertion (.put method)
         userCityMap.put("Rajat", "Bhopal");
         userCityMap.put("Amit", "Indore");
+        userCityMap.put("Amit", "Indore");
 
         // 3. Data Retrieval (.get method)
         String rajatCity = userCityMap.get("Rajat");
