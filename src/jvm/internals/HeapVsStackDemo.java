@@ -6,7 +6,7 @@ public class HeapVsStackDemo {
         // Primitive local variable -> Directly stored inside Thread's Stack Frame
         int stackPrimitive = 100;
 
-        // Object Reference -> Reference stored on Stack, actual Object data on Heap
+        // Object Reference -> Reference stored on Stack, actual Object data on Heap new program
         String heapObject = new String("JVM Deep Dive");
 
         System.out.println("--- JVM Memory Layout Demo ---");
