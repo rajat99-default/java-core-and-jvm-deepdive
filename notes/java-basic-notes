@@ -1,0 +1,98 @@
+Chalo bhai, shuru karte hain **Day 1 — Topic 1: Data Types, Stack vs Heap Memory, aur Java Pass-by-Value (Array Trap)**.
+
+Ismein hum 3 main words ka literal matlab clear karenge: **Primitive**, **Reference**, aur **Heap vs Stack**.
+
+---
+
+### 1. Primitives vs Reference Types (Data kahan rehta hai?)
+
+Java mein data do tarah ka hota hai:
+
+* **Primitive Types (8 hote hain):** `int`, `long`, `double`, `float`, `boolean`, `char`, `byte`, `short`.
+* Inmein **seedhi value** store hoti hai (jaise `int x = 10;`).
+* Yeh chhote aur fast hote hain, isliye **Stack** memory mein store hote hain.
+
+
+* **Reference Types (Objects & Arrays):** `String`, `int[]` (Array), `HashMap`, ya tumhari banayi hui koi bhi `Class` (jaise `User`).
+* Inka actual data bada hota hai, isliye woh **Heap** memory mein banta hai.
+* Variable ke andar actual data nahi, balki us Heap memory ka **address (reference)** store hota hai.
+
+
+
+---
+
+### 2. Stack vs Heap (Literal Matlab)
+
+Jab Java program chalta hai, toh RAM ka kuch hissa JVM ko milta hai, jise do main parts mein baanta jaata hai:
+
+1. **Stack Memory (Temporary & Fast):**
+* Jab bhi koi method (jaise `main()`) call hota hai, Stack mein uske liye ek chhota block (Stack Frame) banta hai.
+* Ismein **local primitive variables** (`int a = 5`) aur **object ke references (addresses)** rakhe jaate hain.
+* Jaise hi method khatam hota hai, uska Stack block turant delete ho jaata hai.
+
+
+2. **Heap Memory (Global & Dynamic):**
+* Jab bhi tum **`new`** keyword likhte ho (jaise `new int[3]` ya `new HashMap<>()`), toh woh object **Heap** mein banta hai.
+* Heap tab tak clean nahi hota jab tak **Garbage Collector (GC)** un unused objects ko delete na kare.
+
+
+
+---
+
+### 3. The Classic Interview Trap: Java Pass-by-Value (Array / Pointer Sawal)
+
+Java mein C/C++ jaise pointers (`*ptr`, `&x`) nahi hote, aur **Java hamesha 100% Pass-by-Value hota hai**.
+
+* Agar tum primitive (`int x = 10`) method mein bhejte ho, toh `10` ki ek **copy** jaati hai. Original `x` nahi badalta.
+* Agar tum Array ya Object (`int[] arr`) method mein bhejte ho, toh **Heap ke address (reference) ki ek copy** jaati hai! Kyunki dono variables (original aur copy) Heap mein **ek hi array** ko point kar rahe hote hain, isliye andar ki value badalne par original array bhi badal jaata hai!
+
+---
+
+### Code Experiment (IntelliJ mein run karo)
+
+Apne `src` folder mein ek naya package `java.basics` (ya `basics`) banao aur usmein **`MemoryAndPassByValueDemo.java`** run karo:
+
+```java
+package basics;
+
+import java.util.Arrays;
+
+public class MemoryAndPassByValueDemo {
+
+    public static void main(String[] args) {
+        // 1. Primitive (Stack mein value '10' store hui)
+        int number = 10;
+        changePrimitive(number);
+        System.out.println("After method call, primitive number: " + number); // 10 hi rahega!
+
+        // 2. Array Object (Heap mein [10, 20, 30] bana, Stack mein 'scores' ke paas uska address hai)
+        int[] scores = {10, 20, 30};
+        changeArrayElement(scores);
+        System.out.println("After changing element, scores: " + Arrays.toString(scores)); // [99, 20, 30] ho jayega!
+
+        // 3. Reassignment Trap (Interviewer ka favorite sawal!)
+        reassignArray(scores);
+        System.out.println("After reassigning array, scores: " + Arrays.toString(scores)); // Kya print hoga?
+    }
+
+    static void changePrimitive(int x) {
+        x = 99; // Sirf local copy badli
+    }
+
+    static void changeArrayElement(int[] arr) {
+        arr[0] = 99; // Address ki copy mili, par Heap mein original array ke 0th index ko badal diya
+    }
+
+    static void reassignArray(int[] arr) {
+        // Yahan local copy 'arr' ko ek NAYE Heap array ka address de diya
+        arr = new int[]{500, 600, 700};
+    }
+}
+
+```
+
+### Is Code Ko Run Karne Se Pehle Guess Karo:
+
+Line 18 (`After reassigning array, scores: ...`) par kya print hoga—`[99, 20, 30]` ya `[500, 600, 700]`?
+
+Run karke dekho aur batao ki kyun aisa hua! Uske baad hum **Topic 2 (`static`, `final`, `this`, `super` aur OOPs)** par chalenge.
