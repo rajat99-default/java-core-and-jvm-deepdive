@@ -96,3 +96,93 @@ public class MemoryAndPassByValueDemo {
 Line 18 (`After reassigning array, scores: ...`) par kya print hoga—`[99, 20, 30]` ya `[500, 600, 700]`?
 
 Run karke dekho aur batao ki kyun aisa hua! Uske baad hum **Topic 2 (`static`, `final`, `this`, `super` aur OOPs)** par chalenge.
+
+
+
+Bilkul bhai, is poore concept ko ekdum clear aur step-by-step trace karke samajhte hain—kyunki ek baar yeh memory map dimaag mein baith gaya, toh Java mein kabhi null pointer, reference, ya pass-by-value ka confusion nahi hoga.
+
+---
+
+### Part 1: Stack aur Heap ka Asli Kaam (Memory Map)
+
+Jab tumhara Java program run hota hai, toh JVM (Java Virtual Machine) RAM ko do main hisson mein baant kar use karti hai:
+
+1. **Stack Memory (Function Execution ke liye):**
+* Har method call (jaise `main()`, `changePrimitive()`) ke liye Stack mein ek chhota box banta hai (**Stack Frame**).
+* Is box mein sirf do cheezein rakhi jaati hain:
+1. **Primitive values** (`int number = 10` — seedha `10` wahin likha hota hai).
+2. **References / Memory Addresses** (jaise `scores = @101` — yani Heap mein data kahan rakha hai, uska pata).
+
+
+* Jaise hi method khatam hota hai, uska Stack Frame turant destroy (clean) ho jaata hai.
+
+
+2. **Heap Memory (Asli Objects aur Arrays ke liye):**
+* Jab bhi tum `new` likhte ho ya array `{10, 20, 30}` banate ho, toh woh bada data **Heap** mein banta hai.
+* Har Heap object ka ek unique internal memory address hota hai (maan lo `@101`).
+* Heap ka data method khatam hone par delete **nahi** hota—woh tab tak rehta hai jab tak **Garbage Collector** usko saaf na kare.
+
+
+
+---
+
+### Part 2: Code ka Line-by-Line Dry Run (Teeno Cases)
+
+Ab dekhte hain code mein step-by-step memory mein kya bana aur kya badla:
+
+#### Case 1: Primitive (`int number = 10;`)
+
+* **`main` ke Stack mein:** `number = 10`.
+* **`changePrimitive(number)` call hua:** Stack mein ek naya box bana `changePrimitive` ke liye. `number` ki value (`10`) ki ek **copy** bankar `x` mein gayi (`x = 10`).
+* **`x = 99;` chala:** Sirf `changePrimitive` wale box ke andar `x` badal kar `99` hua. `main` wale box ka `number` abhi bhi `10` hi hai.
+* Method khatam -> `x` wala box delete.
+* **Output:** `10`.
+
+---
+
+#### Case 2: Array Element Change (`changeArrayElement(scores)`)
+
+* **`int[] scores = {10, 20, 30};` chala:**
+* **Heap mein** address `@101` par ek array bana: `[10, 20, 30]`.
+* **`main` ke Stack mein:** `scores = @101` store hua (yani `scores` ke paas sirf address hai).
+
+
+* **`changeArrayElement(scores)` call hua:**
+* Naya Stack box bana `changeArrayElement` ke liye.
+* Java **Pass-by-Value** hai, isliye `scores` ke andar jo value thi (`@101`), uski ek **copy** `arr` ko mili (`arr = @101`).
+* Ab `scores` aur `arr` dono ke paas **same address `@101**` hai!
+
+
+* **`arr[0] = 99;` chala:**
+* `arr` address `@101` par gaya (Heap mein) aur uske 0th index ko `10` se `99` kar diya.
+* Heap mein `@101` par rakha array ab `[99, 20, 30]` ho chuka hai.
+
+
+* Method khatam -> `arr` wala Stack box delete, par Heap mein change ho chuka hai!
+* **Output:** `[99, 20, 30]`.
+
+---
+
+#### Case 3: Reassignment Trap (`reassignArray(scores)`) — Sabse Important!
+
+* **`reassignArray(scores)` call hua:**
+* Naya Stack box bana `reassignArray` ke liye.
+* Phir se `scores` ke address (`@101`) ki ek **copy** `arr` ko mili (`arr = @101`).
+
+
+* **`arr = new int[]{500, 600, 700};` chala:**
+* `new` keyword chalte hi **Heap mein** ek bilkul naya array bana, maan lo address **`@202`** par: `[500, 600, 700]`.
+* Aur `arr = ...` likhne se sirf `reassignArray` ke local variable `arr` ka address badal kar `@101` se **`@202`** ho gaya!
+* **`main` ke Stack mein `scores` ke paas abhi bhi purana address `@101` hi hai!**
+
+
+* Method khatam -> `reassignArray` ka box delete (aur `@202` wala naya array bekaar hokar Garbage Collector ke liye chhoot gaya).
+* Jab `main` mein `Arrays.toString(scores)` chala, toh woh apne address `@101` par gaya, jahan abhi bhi **`[99, 20, 30]`** rakha hai!
+
+---
+
+### Ek Line Ka Golden Rule (Interview ke liye):
+
+> *"Java is always Pass-by-Value. When passing an object or array, Java passes a copy of the reference (memory address) by value. You can mutate the internal state of the object using that copied reference (`arr[0] = 99`), but reassigning the reference itself (`arr = new int[]{...}`) only changes the local copy and never affects the caller's reference."*
+
+Ab batao bhai—kya ab Stack, Heap, Reference, aur Pass-by-Value ka picture ekdum crystal clear ho gaya? Agar haan, toh agle step mein **Topic 2 (`static`, `final`, `this`, `super` aur OOPs)** par chalte hain!
