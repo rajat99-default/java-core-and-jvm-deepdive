@@ -186,3 +186,49 @@ Ab dekhte hain code mein step-by-step memory mein kya bana aur kya badla:
 > *"Java is always Pass-by-Value. When passing an object or array, Java passes a copy of the reference (memory address) by value. You can mutate the internal state of the object using that copied reference (`arr[0] = 99`), but reassigning the reference itself (`arr = new int[]{...}`) only changes the local copy and never affects the caller's reference."*
 
 Ab batao bhai—kya ab Stack, Heap, Reference, aur Pass-by-Value ka picture ekdum crystal clear ho gaya? Agar haan, toh agle step mein **Topic 2 (`static`, `final`, `this`, `super` aur OOPs)** par chalte hain!
+
+Ekdum badhiya bhai! Memory map aur pass-by-value ka concept apne dimaag mein ekdum solid baith gaya hai, aur tune notes bhi apne repo mein save kar liye hain. Yeh hui na SDE wali baat!
+
+Ab chalte hain apne **Day 1 ke agle padav par: Topic 2 (`static`, `final`, Encapsulation & Basic OOPs)**.
+
+Jaise ki humne tay kiya tha ki code tu khud likhega aur main tujhe sirf problem statement/question dunga, toh yeh raha tera pehla coding task.
+
+---
+
+### 💻 Coding Task 1: Encapsulation & `static` Keyword
+
+Apne `src/basics` package ke andar ek nayi class bana: **`BankAccount.java`**.
+
+**Tujhe is class mein yeh sab implement karna hai (bina kisi AI ya Google ki help ke):**
+
+1. **Private Fields:**
+* `String accountNumber`
+* `String holderName`
+* `double balance`
+
+
+2. **Static Variable:**
+* `static int totalAccounts = 0;` (Yeh track karega ki ab tak kitne BankAccount objects ban chuke hain).
+
+
+3. **Constructor:**
+* Ek parameterized constructor jo account number aur holder name set kare, aur starting mein balance `0.0` rakhe. Saath hi, constructor ke andar `totalAccounts++` bhi hona chahiye!
+
+
+4. **Getters & Setters:**
+* Kyunki fields `private` hain, toh balance ya holder name ko read/write karne ke liye proper getters aur setters methods likh.
+
+
+5. **Methods:**
+* `public void deposit(double amount)` — jo balance ko badhaye (amount positive hona chahiye).
+* `public void withdraw(double amount)` — jo balance ko kam kare (agar balance kam hai toh error message print kar de).
+* `public static void showTotalAccounts()` — ek static method jo total accounts print kare.
+
+
+
+**Test Karne ke liye:**
+Ek `Main.java` ya usi class mein `main` method bana, 2-3 accounts create kar, kuch deposit/withdraw kar, aur check kar ki kya `totalAccounts` sahi count de raha hai ya nahi.
+
+Isko apne IntelliJ mein khud likh, run kar, aur jab likh le toh mujhe bata—phir hum isme ek chhota sa twist laayenge (**Custom Exception** ka)!
+
+Bata, shuru karein?
