@@ -232,3 +232,94 @@ Ek `Main.java` ya usi class mein `main` method bana, 2-3 accounts create kar, ku
 Isko apne IntelliJ mein khud likh, run kar, aur jab likh le toh mujhe bata—phir hum isme ek chhota sa twist laayenge (**Custom Exception** ka)!
 
 Bata, shuru karein?
+
+
+Aaja ab baaki primitive data types par `~` (Bitwise NOT) ka behavior dekhte hain. Rule seedha hai: **`~` sirf integer types par kaam karta hai (`byte`, `short`, `int`, `long`)**.
+
+---
+
+### 1. `float` aur `double` (`~` Allowed Nahi Hai)
+
+Agar tu `float x = 10.5f;` ya `double y = 10.5;` par `~x` likhega, toh **compile-time error** aayega (`bad operand type ... for unary operator '~'`).
+
+* **Kyun?** `float` aur `double` IEEE 754 follow karte hain, two's complement nahi. Unke bits ko seedha flip karne ka koi mathematical ya logical matlab nahi banta—isliye Java language spec ne un par `~` block kar rakha hai.
+* **Trick / Workaround:** Agar kabhi raw bits flip karne hi hon, toh pehle `Float.floatToIntBits(x)` se unhe `int` mein convert karna padta hai, tab `~` chalega—par normal coding mein aisa kabhi nahi hota.
+
+---
+
+### 2. `boolean` (`~` Allowed Nahi Hai)
+
+`boolean flag = true;` par `~flag` bhi **compile-time error** deta hai.
+
+* **Kyun?** Java mein `boolean` koi `0`/`1` integer nahi hai. Logical inversion ke liye **`!`** (`!flag`) use hota hai, `~` nahi.
+
+---
+
+### 3. `byte`, `short`, aur `char` (Promotion Trap!)
+
+Yahan sabse bada interview trap aata hai: **Binary Numeric Promotion**. Jab bhi tu `byte`, `short`, ya `char` par `~` lagata hai, Java unhe pehle **`int` (32-bit)** mein promote karta hai, phir `~` chalata hai, aur result bhi **`int`** hi deta hai.
+
+| Type | Initial Value | What Happens on `~x` | Result Type & Value |
+| --- | --- | --- | --- |
+| `byte` | `byte b = 10;` | `10` promotes to 32-bit `int`, flips all 32 bits | `int` with value `-11` |
+| `short` | `short s = 10;` | `10` promotes to 32-bit `int`, flips all 32 bits | `int` with value `-11` |
+| `char` | `char c = 'A';` (ASCII/Unicode `65`) | `65` promotes to 32-bit `int`, flips all 32 bits | `int` with value `-66` |
+| `long` | `long l = 10L;` | Flips all 64 bits directly as `long` | `long` with value `-11L` |
+
+#### Trap Example (`byte` aur `char`):
+
+```java
+byte b = 10;
+// byte res = ~b; // Compile error! ~b ka type 'int' hai, 'byte' mein bina cast kiye nahi jayega
+int res = ~b;      // Sahi hai -> -11
+byte back = (byte) ~b; // Explicit cast se wapas byte -> -11
+
+```
+
+`char` ke saath bhi wahi hota hai: `'A'` ki Unicode value `65` hai, toh `~'A'` `int` `-66` deta hai (`-(65 + 1)`), koi character nahi.
+
+---
+
+### Quick Summary
+
+* **`int` & `long`:** Seedha `~x` chalta hai; formula hamesha `-(x + 1)` rehta hai (`int` mein 32-bit, `long` mein 64-bit).
+* **`byte`, `short`, `char`:** Pehle `int` mein promote hote hain, phir `-(x + 1)` milta hai; wapas `byte`/`short`/`char` chahiye toh explicit cast karna padega.
+* **`float`, `double`, `boolean`:** `~` directly use nahi ho sakta (`float`/`double` ke liye `!` bhi nahi chalta; `boolean` ke liye `!` chalta hai).
+
+
+Haan, bitwise `~` ke muqable **shift operators (`<<`, `>>`, `>>>`) interviews aur online tests mein zyada poochhe jaate hain**—khaskar jab DSA (bit manipulation) ya Java ke data types/overflow ke traps check karne hon.
+
+Java mein teen shift operators hote hain:
+
+### 1. `<<` (Signed Left Shift)
+
+Bits ko left mein shift karta hai aur right se `0` bharta hai.
+
+* **Math shortcut:** Positive number par `n << k` ka matlab aksar $n \times 2^k$ hota hai (jab tak overflow na ho).
+* **Example:** `5 << 1` → `10` ($5 \times 2^1$), `5 << 2` → `20` ($5 \times 2^2$).
+* **Trap:** Agar left shift karne par sign bit (`int` mein 32nd bit) badal jaaye, toh positive number **negative** bhi ban sakta hai (jaise `1 << 31` = `Integer.MIN_VALUE`, yaani `-2147483648`).
+
+### 2. `>>` (Signed Right Shift)
+
+Bits ko right mein shift karta hai aur left mein **purana sign bit** (`0` positive ke liye, `1` negative ke liye) copy karta hai.
+
+* **Math shortcut:** `n >> k` roughly $\lfloor n / 2^k \rfloor$ jaisa kaam karta hai (negative numbers ke liye floor division ke hisaab se).
+* **Example:** `20 >> 2` → `5`; `-8 >> 1` → `-4` (sign `1` bacha rehta hai).
+
+### 3. `>>>` (Unsigned Right Shift — Java Ka Khas Trap)
+
+Bits ko right mein shift karta hai aur left mein **hamesha `0**` bharta hai—chahe number positive ho ya negative.
+
+* **Interviewer ise kyun puchhta hai?** Kyunki negative number par `>>>` lagane par sign bit `0` ho jaata hai aur result **ek bada positive number** ban jaata hai.
+* **Example:** `-1 >>> 1` → `Integer.MAX_VALUE` (`2147483647`), kyunki `-1` ke saare 32 bits `1` hote hain, aur `1` bit right shift karke aage `0` daalne par sabse bada positive `int` milta hai.
+
+---
+
+### Do Classic Shift Traps Jo Interview Mein Fasate Hain
+
+1. **Shift Count Wrap-Around (`% 32` aur `% 64`):**
+Java mein `int` par shift karte waqt shift count ka sirf lower **5 bits** (`shiftCount & 31`, yaani `shiftCount % 32`) use hota hai; `long` ke liye lower **6 bits** (`shiftCount % 64`). Isliye `1 << 32` `0` nahi deta—`32 % 32 = 0` maankar `1 << 0` = **`1`** deta hai.
+2. **Small Type Promotion (`byte`, `short`, `char`):**
+Shift karne se pehle bhi ye `int` mein promote hote hain, isliye result `int` (ya `long` agar operand `long` ho) aata hai.
+
+Agar ye teeno operators (`<<`, `>>`, `>>>`) aur `% 32` wala rule samajh aa gaya hai, toh shift questions aaram se handle ho jaayenge.
