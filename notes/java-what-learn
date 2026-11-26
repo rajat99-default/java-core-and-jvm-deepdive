@@ -1,0 +1,47 @@
+Is poori GfG roadmap mein se tere actual target (**Backend / Systems SDE, Spring Boot projects, aur Apache Kafka open-source contributions**) ke hisaab se filter kar dete hain—taaki tu sirf high-signal topics par time lagaye aur purane ya low-ROI topics par waqt barbaad na kare.
+
+---
+
+### 1. Must-Do (High Priority — Bina Skip Kiye Padhna Hai)
+
+Yeh sections tere interviews, Spring Boot backend, aur Kafka codebase samajhne ke liye compulsory hain:
+
+* **Basics (Jo bach gaya hai):** `JDK vs JRE vs JVM`, `Variables and Data Types`, `Wrapper Classes` *(Operators, Decision Making, Loops, Jump Statements tu already cover kar chuka hai)*.
+* **Methods:** `Introduction`, `Static Methods vs Instance Methods`, `Access Modifiers`, `Varargs`.
+* **Arrays:** `Introduction`, `Multi-Dimensional Arrays`, `Arrays Class`, `Final Arrays` *(Jagged arrays bas 2 minute dekh lena)*.
+* **Strings (Super Important):** Poora section—`.equals() vs ==`, `String`, `StringBuffer`, `StringBuilder`.
+* **OOP Concepts (Core Pillar):** Poora section—`this`, `super`, `Encapsulation`, `Inheritance`, `Polymorphism`, `Abstraction`, `Object Class`, `Packages`.
+* **Interfaces (Spring Boot & Kafka ki Jaan):** Poora section—`Interfaces`, `Class vs Interface`, `Functional Interface`, `Marker Interface` *(Nested interface bas overview)*.
+* **Exception Handling:** Poora section—`Try-Catch`, `Final, Finally and Finalize`, `Throw and Throws`, `Custom Exceptions`, `NullPointerException`, `Exception Handling with Method Overriding`.
+* **Memory Allocation (JVM Internals):** Poora section—`Stack vs Heap`, `How Objects Stored`, `Types of JVM Memory Areas`, `Garbage Collection`, `Memory Leaks`.
+* **Generics:** Poora section—`Generic Classes`, `Wildcards`, `Bounded Types`, `Type Erasure` *(Spring Boot aur Kafka ka codebase Generics se bhara pada hai)*.
+* **Collections Framework (Interview Ka #1 Topic):** Poora section—`List`, `Set`, `Queue`, `Map` (`HashMap` internals), `Iterator`, `Comparable` vs `Comparator`.
+* **Java 8+ Features (Production Standard):** Poora section—`Lambda`, `Predicate/Consumer/Supplier`, `Method References`, `Streams`, `Optional`, `Collectors`.
+* **Multithreading & Synchronization (Kafka aur Backend ke Liye Critical):** Poora section—`Thread.start() vs run()`, `Synchronization`, `Locks & ReentrantLock`, `Deadlock`, `Thread Pools` (`ExecutorService`).
+
+---
+
+### 2. Quick Scan / Light Read (Sirf Overview Lena Hai — Zyada Time Mat Lagana)
+
+Inhe bas itna padhna hai ki syntax aur basic concept pata ho, deep ratta nahi maarna:
+
+* **Date and Time API:** Sirf `LocalDate`, `LocalDateTime`, `Duration`, aur `DateTimeFormatter` dekh lena (15–20 minute ka kaam).
+* **File Handling (Java IO):** Sirf `BufferedReader`, `File Handling`, aur streams ka basic idea (kyunki tu pehle hi samajh chuka hai ki production mein `Scanner` ki jagah streams/buffers use hote hain). `FilePermissionClass` aur `FileDescriptorClass` skip kar.
+* **JDBC:** Sirf `Connection`, `PreparedStatement`, `Transactions`, aur `Connection Pooling` ka concept samajh le—baaki actual kaam tu Spring Data JPA / Hibernate se karega, raw JDBC boilerplate likhne ki zaroorat nahi padegi.
+
+---
+
+### 3. Skip Kar De (Low ROI / Outdated / Time Waste)
+
+Inpar abhi bilkul time kharab mat kar:
+
+* **Console Mini-Projects:** `Number Guessing Game`, `Tic-Tac-Toe`, `Snake Game`, `Text Editor`, `Chat Application` *(Tere paas real backend projects aur open-source ka target hai—yeh school-level console games resume mein zero value add karte hain)*.
+* **Regex:** Poora chapter ratne ki zaroorat nahi; jab kabhi validation ki zaroorat pade tab lookup kar lena.
+* **Networking (Raw Sockets):** `Socket Programming`, `ServerSocket`, `URL Class`—Kafka aur Spring Boot apni networking khud handle karte hain; fresher backend interviews mein raw Java socket code nahi poochha jaata.
+* **Command Line Arguments:** Bas `String[] args` kya hota hai itna pata hai toh kaafi hai, alag se padhne ki zaroorat nahi.
+
+---
+
+### Agla Kadam
+
+Abhi **Basics** mein se sirf **`Wrapper Classes`** (aur agar `JDK vs JRE vs JVM` / `Data Types` bacha ho toh woh) complete kar, aur phir seedha **Methods** -> **Arrays** -> **Strings** -> **OOP** par jump kar. Agla page bhej!
