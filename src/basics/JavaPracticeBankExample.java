@@ -22,6 +22,9 @@ public class JavaPracticeBankExample {
     {
         BankAccount rahul = new BankAccount();
         BankAccount rajat = new BankAccount();
+        JavaPracticeBankExample o = new JavaPracticeBankExample();
+
+        o.bankRules();
 
 
         rahul.balance = 200;
