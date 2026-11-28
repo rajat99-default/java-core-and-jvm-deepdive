@@ -5,7 +5,7 @@ public class missingReturn {
         if (x > 0) {
             return 1;
         }
-//        else return 0;
+       else return 0;
         // Compile Error: missing return statement! Kyunki x <= 0 ke liye koi return nahi hai
     }
     public static void main (String[] args)
